@@ -10,7 +10,6 @@ RUN npm run build -- --configuration production
 
 # Step 2: Serve with NGINX
 FROM nginx:alpine
-COPY --from=build /app/dist/100729832-lab-test2-comp3133 /usr/share/nginx/html
+COPY --from=build /app/dist/100729832-lab-test2-comp3133/browser /usr/share/nginx/html
 
-# Angular routing fix
 COPY nginx.conf /etc/nginx/conf.d/default.conf
