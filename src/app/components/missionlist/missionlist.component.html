@@ -13,21 +13,22 @@
     <p class="error">{{ error() }}</p>
   } @else {
     <div class="missions-grid">
-      @for (mission of launches(); track mission.flight_number) {
+      @for (mission of launches(); track $index) {
+
         <mat-card class="mission-card" (click)="onMissionSelected(mission.flight_number)">
           <mat-card-header>
             <mat-card-title>{{ mission.mission_name }}</mat-card-title>
             <mat-card-subtitle>Flight #{{ mission.flight_number }}</mat-card-subtitle>
           </mat-card-header>
 
-          @if (mission.links.mission_patch_small) {
-            <img mat-card-image [src]="mission.links.mission_patch_small" />
+          @if (mission.links?.mission_patch_small) {
+            <img mat-card-image [src]="mission.links?.mission_patch_small" />
           }
 
           <mat-card-content>
             <p><strong>Year:</strong> {{ mission.launch_year }}</p>
 
-            @switch (mission.rocket.rocket_type) {
+            @switch (mission.rocket?.rocket_type) {
               @case ('FT') {
                 <p><strong>Rocket Type:</strong> Falcon 9 FT</p>
               }
@@ -35,14 +36,15 @@
                 <p><strong>Rocket Type:</strong> Falcon 9 v1.1</p>
               }
               @default {
-                <p><strong>Rocket Type:</strong> {{ mission.rocket.rocket_type }}</p>
+                <p><strong>Rocket Type:</strong> {{ mission.rocket?.rocket_type }}</p>
               }
             }
 
-            <p><strong>Rocket Name:</strong> {{ mission.rocket.rocket_name }}</p>
+            <p><strong>Rocket Name:</strong> {{ mission.rocket?.rocket_name }}</p>
             <p><strong>Details:</strong> {{ mission.details || 'No details available.' }}</p>
           </mat-card-content>
         </mat-card>
+
       }
     </div>
   }

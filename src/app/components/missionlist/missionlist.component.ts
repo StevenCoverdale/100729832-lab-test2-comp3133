@@ -1,29 +1,42 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { SpacexService } from '../../services/spacex.service';
+import { MissionfilterComponent } from '../missionfilter/missionfilter.component';
 
 @Component({
   selector: 'app-missionlist',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatToolbarModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatToolbarModule,
+    MissionfilterComponent
+  ],
   templateUrl: './missionlist.component.html',
   styleUrls: ['./missionlist.component.scss']
 })
 export class MissionlistComponent implements OnInit {
+
   loading = signal(true);
   error = signal<string | null>(null);
 
-  launches = this.spacexService.launchesSignal;
-  totalLaunches = computed(() => this.launches().length);
+  constructor(
+    private spacexService: SpacexService,
+    private router: Router
+  ) {}
 
-  constructor(private spacexService: SpacexService, private router: Router) {}
+  launches = computed(() => this.spacexService.launchesSignal());
+
+  totalLaunches = computed(() => this.launches().length);
 
   ngOnInit(): void {
     this.spacexService.getAllLaunches().subscribe({
-      next: launches => {
+      next: (launches) => {
         this.spacexService.launchesSignal.set(launches);
         this.loading.set(false);
       },
@@ -34,7 +47,7 @@ export class MissionlistComponent implements OnInit {
     });
   }
 
-  onMissionSelected(flight: number) {
-    this.router.navigate(['/mission', flight]);
+  onMissionSelected(flightNumber: number) {
+    this.router.navigate(['/mission', flightNumber]);
   }
 }

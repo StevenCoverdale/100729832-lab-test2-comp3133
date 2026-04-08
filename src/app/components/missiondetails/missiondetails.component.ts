@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -13,25 +13,42 @@ import { Launch } from '../../models/launch.model';
   templateUrl: './missiondetails.component.html',
   styleUrls: ['./missiondetails.component.scss']
 })
-export class MissiondetailsComponent implements OnInit {
-  mission?: Launch;
-  loading = true;
+export class MissiondetailsComponent {
+
+  // Signals
+  mission = signal<Launch | null>(null);
+  loading = signal(true);
+  error = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
     private spacexService: SpacexService
-  ) {}
+  ) {
 
-  ngOnInit(): void {
-    const flightNumber = this.route.snapshot.paramMap.get('flight_number')!;
-    this.spacexService.getLaunchByFlightNumber(flightNumber).subscribe({
-      next: mission => {
-        this.mission = mission;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
+    // React to route param changes
+    effect(() => {
+      const param = this.route.snapshot.paramMap.get('flight_number');
+      const flightNumber = Number(param);
+
+      if (!flightNumber) {
+        this.error.set('Invalid mission ID');
+        this.loading.set(false);
+        return;
       }
+
+      this.loading.set(true);
+      this.error.set(null);
+
+      this.spacexService.getLaunchByFlightNumber(flightNumber).subscribe({
+        next: (mission) => {
+          this.mission.set(mission);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('Failed to load mission details');
+          this.loading.set(false);
+        }
+      });
     });
   }
 }

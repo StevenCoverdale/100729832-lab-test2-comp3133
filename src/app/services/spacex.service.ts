@@ -16,13 +16,13 @@ export class SpacexService {
     return this.http.get<Launch[]>(`${this.baseUrl}/launches`);
   }
 
-  getLaunchesByYear(year: string): Observable<Launch[]> {
-    return this.http.get<Launch[]>(`${this.baseUrl}/launches`, {
-      params: { launch_year: year }
-    });
+  getLaunchByFlightNumber(flightNumber: number): Observable<Launch> {
+    return this.http.get<Launch>(`${this.baseUrl}/launches/${flightNumber}`);
   }
 
-  getLaunchByFlightNumber(flightNumber: string): Observable<Launch> {
-    return this.http.get<Launch>(`${this.baseUrl}/launches/${flightNumber}`);
+  getLaunchesByYear(year: string): Observable<Launch[]> {
+  return this.http.get<Launch[]>(`${this.baseUrl}/launches`, {
+    params: { launch_year: year }
+  });
   }
 }

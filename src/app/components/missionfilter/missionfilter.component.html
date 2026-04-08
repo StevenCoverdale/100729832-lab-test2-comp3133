@@ -1,14 +1,20 @@
 <form [formGroup]="form" class="filter-form" (ngSubmit)="onFilter()">
+
   <mat-form-field appearance="outline">
     <mat-label>Launch Year</mat-label>
+
     <mat-select formControlName="year">
       <mat-option [value]="null">All</mat-option>
-      @for (y of years; track y) {
-        <mat-option [value]="y">{{ y }}</mat-option>
-      }
+      <mat-option *ngFor="let y of years" [value]="y">{{ y }}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit">Filter</button>
-  <button mat-button type="button" (click)="onClear()">Clear</button>
+  <button mat-raised-button color="primary" type="submit">
+    Filter
+  </button>
+
+  <button mat-button type="button" (click)="onClear()">
+    Clear
+  </button>
+
 </form>
