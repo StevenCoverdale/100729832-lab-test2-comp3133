@@ -1,0 +1,37 @@
+<mat-toolbar color="primary">Mission Details</mat-toolbar>
+
+<div class="container" *ngIf="!loading && mission; else loadingTpl">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ mission.mission_name }}</mat-card-title>
+      <mat-card-subtitle>Flight #{{ mission.flight_number }}</mat-card-subtitle>
+    </mat-card-header>
+
+    @if (mission.links.mission_patch_small) {
+      <img mat-card-image [src]="mission.links.mission_patch_small" />
+    }
+
+    <mat-card-content>
+      <p><strong>Launch Year:</strong> {{ mission.launch_year }}</p>
+      <p><strong>Rocket:</strong> {{ mission.rocket.rocket_name }} ({{ mission.rocket.rocket_type }})</p>
+      <p><strong>Details:</strong> {{ mission.details || 'No details available.' }}</p>
+
+      <h3>Links</h3>
+      <ul>
+        @if (mission.links.article_link) {
+          <li><a [href]="mission.links.article_link" target="_blank">Article</a></li>
+        }
+        @if (mission.links.wikipedia) {
+          <li><a [href]="mission.links.wikipedia" target="_blank">Wikipedia</a></li>
+        }
+        @if (mission.links.video_link) {
+          <li><a [href]="mission.links.video_link" target="_blank">Video</a></li>
+        }
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #loadingTpl>
+  <p class="container">Loading mission details...</p>
+</ng-template>
